@@ -7,6 +7,9 @@
 /**
  * Resourceful controller for interacting with properties
  */
+
+// Para ter acesso ao model de imóveis
+const Property = use('App/Models/Property')
 class PropertyController {
   /**
    * Show a list of all properties.
@@ -17,7 +20,12 @@ class PropertyController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
+
+  //Retornando imóveis
   async index ({ request, response, view }) {
+    const properties = Property.all()
+
+    return properties
   }
 
   /**
@@ -53,6 +61,11 @@ class PropertyController {
    * @param {View} ctx.view
    */
   async show ({ params, request, response, view }) {
+    const property = await Property.findOrFail(params.id)
+
+    await property.load('images')
+
+    return property
   }
 
   /**
@@ -87,6 +100,12 @@ class PropertyController {
    * @param {Response} ctx.response
    */
   async destroy ({ params, request, response }) {
+    const property = await Property.findOrFail(params.id)
+
+    if(property.user_id !== auth.user.id){
+      return response.status(401).send({error:'Not authorized'})
+    }
+    await property.delete
   }
 }
 
