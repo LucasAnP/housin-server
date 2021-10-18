@@ -18,3 +18,10 @@ const Route = use('Route')
 
 Route.post('/users', 'UserController.create');
 Route.post('/sessions', 'SessionController.create');
+
+//Helper que utiliza para não criar uma rota para cada método
+Route.resource('properties', 'PropertyController')
+  //apiOnly - Garante que as rotas CREATE e EDIT (deletadas) não tenham rotas
+  .apiOnly()
+  //middleware - Garante que usuários não autenticados não possam utilizar essa rota
+  .middleware('auth')
