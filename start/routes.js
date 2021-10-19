@@ -25,3 +25,7 @@ Route.resource('properties', 'PropertyController')
   .apiOnly()
   //middleware - Garante que usuários não autenticados não possam utilizar essa rota
   .middleware('auth')
+
+  Route.post('properties/:id/images', 'ImageController.store').middleware('auth')
+
+  Route.get('images/:path', 'ImageController.show')

@@ -23,7 +23,9 @@ class PropertyController {
 
   //Retornando imóveis
   async index ({ request, response, view }) {
-    const properties = Property.all()
+    const properties = Property.query()
+      .with('images')
+      .fetch()
 
     return properties
   }
