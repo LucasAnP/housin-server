@@ -15,7 +15,7 @@ class PropertySchema extends Schema {
         .onDelete('CASCADE');
       table.string('title').notNullable();
       table.string('description').notNullable();
-      table.string('adress').notNullable();
+      table.string('address').notNullable();
       table.integer('compatibility');
       table.timestamps();
     })
