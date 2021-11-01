@@ -1,5 +1,7 @@
 'use strict'
 
+const UserController = require('../app/Controllers/Http/UserController');
+
 /*
 |--------------------------------------------------------------------------
 | Routes
@@ -19,6 +21,9 @@ const Route = use('Route')
 Route.post('/users', 'UserController.create');
 Route.post('/sessions', 'SessionController.create');
 
+
+Route.get('/users/:id', 'UserController.show');
+
 //Helper que utiliza para não criar uma rota para cada método
 Route.resource('properties', 'PropertyController')
   //apiOnly - Garante que as rotas CREATE e EDIT (deletadas) não tenham rotas
@@ -29,3 +34,4 @@ Route.resource('properties', 'PropertyController')
   Route.post('properties/:id/images', 'ImageController.store').middleware('auth')
 
   Route.get('images/:path', 'ImageController.show')
+
