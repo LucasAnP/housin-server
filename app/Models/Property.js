@@ -11,6 +11,10 @@ class Property extends Model {
   images () {
     return this.hasMany('App/Models/Image')
   }
+
+  propertyQualities(){
+    return this.hasMany('App/Models/PropertyQuality')
+  }
 }
 
 module.exports = Property

@@ -31,12 +31,20 @@ class User extends Model {
    *
    * @return {Object}
    */
-  tokens () {
+  tokens () {T
     return this.hasMany('App/Models/Token')
   }
 
   properties(){
     return this.hasMany('App/Models/Property')
+  }
+
+  matchesProperties(){
+    return this.belongsToMany('App/Models/Property').pivotTable('user_matches')
+  }
+
+  userQualities(){
+    return this.hasMany('App/Models/UserQuality')
   }
 
   static get hidden(){

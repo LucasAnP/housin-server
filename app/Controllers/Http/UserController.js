@@ -1,7 +1,5 @@
 'use strict'
 
-const PropertyController = require("./PropertyController");
-
 const User = use("App/Models/User");
 
 class UserController {
@@ -13,10 +11,13 @@ class UserController {
     return user;
   }
 
-  async show ({params}){
-    const user = await User.query().where('id',params.id).with('properties').fetch()
+  async show ({params, auth}){
+    const user = await User.query().where('id',params.id).with('properties').with('matchesProperties').with('userQualities').fetch()
+
     return user;
   }
+
+
 }
 
 module.exports = UserController
