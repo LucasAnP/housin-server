@@ -1,4 +1,4 @@
-'use strict'
+"use strict";
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -9,7 +9,8 @@
  */
 
 // Para ter acesso ao model de imóveis
-const Property = use('App/Models/Property')
+const Property = use("App/Models/Property");
+const Database = use("Database");
 class PropertyController {
   /**
    * Show a list of all properties.
@@ -22,12 +23,45 @@ class PropertyController {
    */
 
   //Retornando imóveis
-  async index ({ request, response, view }) {
-    const properties = Property.query()
-      .with('images')
-      .fetch()
+  async index({ request, response, auth }) {
+    const { id } = auth.user;
+    const properties = await Database.raw(
+      `select distinct
+        p.id, p.title, p.address, p.description, p.address, p.smoke, p.drink, p.organized, p.animals, p.responsable
+          from properties p, user_qualities u where (p.smoke = u.smoke)
+            or (p.organized = u.organized)
+            or (p.drink = u.drink)
+            or (p.animals = u.animals)
+            or (p.responsable = u.responsable) and u.id = ${id} `
+    );
 
-    return properties
+    const propertiesCompability = properties.rows.map((property) => {
+      let Suncompatibility = () => {
+        let sun = 0;
+        if (property.smoke === "1") {
+          sun += 20;
+        }
+        if (property.drink === "1") {
+          sun += 20;
+        }
+        if (property.animals === "1") {
+          sun += 20;
+        }
+        if (property.organized === "1") {
+          sun += 20;
+        }
+        if (property.responsable === "1") {
+          sun += 20;
+        }
+        return sun;
+      };
+      return {
+        ...property,
+        compatibility: Suncompatibility(),
+      };
+    });
+
+    return propertiesCompability;
   }
 
   /**
@@ -39,8 +73,7 @@ class PropertyController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async create ({ request, response, view }) {
-  }
+  async create({ request, response, view }) {}
 
   /**
    * Create/save a new property.
@@ -50,18 +83,24 @@ class PropertyController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ auth, request, response }) {
-    const {id} = auth.user
-    const data = request.only([
-      'title',
-      'address',
-      'description',
-      'compatibility'
-    ])
+  async store({ auth, request, response }) {
+    const { id } = auth.user;
+    const { title, address, description, qualities } = request.all();
+    const { organized, smoke, drink, responsable, animals } = qualities;
+    const propertyData = {
+      user_id: id,
+      title,
+      address,
+      description,
+      organized,
+      smoke,
+      drink,
+      responsable,
+      animals,
+    };
+    const property = await Property.create(propertyData);
 
-    const property = await Property.create({ ...data, user_id:id})
-
-    return property
+    return property;
   }
 
   /**
@@ -73,12 +112,12 @@ class PropertyController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
-    const property = await Property.findOrFail(params.id)
+  async show({ params, request, response, view }) {
+    const property = await Property.findOrFail(params.id);
 
-    await property.load('images')
+    await property.load("images");
 
-    return property
+    return property;
   }
 
   /**
@@ -90,8 +129,7 @@ class PropertyController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async edit ({ params, request, response, view }) {
-  }
+  async edit({ params, request, response, view }) {}
 
   /**
    * Update property details.
@@ -101,22 +139,17 @@ class PropertyController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request}) {
+  async update({ params, request }) {
     // Retorna erro se a propriedade não existir
-    const property = await Property.findOrFail(params.id)
+    const property = await Property.findOrFail(params.id);
 
-    const data = request.only([
-      'title',
-      'address',
-      'description',
-      'compatibility'
-    ])
+    const data = request.only(["title", "address", "description"]);
 
-    property.merge(data)
+    property.merge(data);
 
-    await property.save()
+    await property.save();
 
-    return property
+    return property;
   }
 
   /**
@@ -127,14 +160,14 @@ class PropertyController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
-    const property = await Property.findOrFail(params.id)
+  async destroy({ params, request, response }) {
+    const property = await Property.findOrFail(params.id);
 
-    if(property.user_id !== auth.user.id){
-      return response.status(401).send({error:'Not authorized'})
+    if (property.user_id !== auth.user.id) {
+      return response.status(401).send({ error: "Not authorized" });
     }
-    await property.delete
+    await property.delete;
   }
 }
 
-module.exports = PropertyController
+module.exports = PropertyController;

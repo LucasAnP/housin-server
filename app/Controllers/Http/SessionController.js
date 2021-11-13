@@ -2,7 +2,6 @@
 const User = use("App/Models/User");
 class SessionController {
   async create({ request, auth }) {
-    console.log('Request', request)
     try {
       const { email, password} = request.all();
       const token = await auth.attempt(email, password);
