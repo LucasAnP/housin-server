@@ -13,7 +13,7 @@ class UserController {
 
   async show ({params, auth}){
     const user = await User.query().where('id',params.id).with('properties').with('matchesProperties').with('userQualities').fetch()
-    const match = await User.query().where('id',params.id).with('matchesProperties')
+
     return user;
   }
 
