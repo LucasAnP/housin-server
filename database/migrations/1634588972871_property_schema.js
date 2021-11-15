@@ -16,11 +16,11 @@ class PropertySchema extends Schema {
       table.string('title').notNullable();
       table.string('description').notNullable();
       table.string('address').notNullable();
-      table.string('organized').notNullable();
-      table.string('smoke').notNullable();
-      table.string('drink').notNullable();
-      table.string('responsable').notNullable();
-      table.string('animals').notNullable();
+      table.string('organized');
+      table.string('smoke');
+      table.string('drink');
+      table.string('responsable');
+      table.string('animals');
       table.timestamps();
     })
   }
