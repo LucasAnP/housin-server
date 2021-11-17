@@ -18,6 +18,20 @@ class UserController {
     return user;
   }
 
+  async update({params, request}){
+    const user = await User.findOrFail(params.id);
+
+    const data = request.only(["username", "email"]);
+
+    user.username = data.username
+    user.email = data.email
+
+    await user.save();
+
+    return user;
+
+  }
+
 }
 
 module.exports = UserController

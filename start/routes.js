@@ -27,6 +27,7 @@ Route.post('/sessions', 'SessionController.create');
 Route.get('/users/:id', 'UserController.show');
 
 Route.put('/users/:id/qualities', 'UserQualityController.update');
+Route.put('/users/:id', 'UserController.update');
 
 //Helper que utiliza para não criar uma rota para cada método
 Route.resource('properties', 'PropertyController')
