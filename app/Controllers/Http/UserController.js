@@ -1,6 +1,7 @@
 'use strict'
 
 const User = use("App/Models/User");
+const Database = use("Database");
 
 class UserController {
   async create ({request}){
@@ -11,12 +12,11 @@ class UserController {
     return user;
   }
 
-  async show ({params, auth}){
+  async show ({params}){
     const user = await User.query().where('id',params.id).with('properties').with('matchesProperties').with('userQualities').fetch()
 
     return user;
   }
-
 
 }
 

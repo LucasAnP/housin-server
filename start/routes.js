@@ -26,6 +26,8 @@ Route.post('/sessions', 'SessionController.create');
 
 Route.get('/users/:id', 'UserController.show');
 
+Route.put('/users/:id/qualities', 'UserQualityController.update');
+
 //Helper que utiliza para não criar uma rota para cada método
 Route.resource('properties', 'PropertyController')
   //apiOnly - Garante que as rotas CREATE e EDIT (deletadas) não tenham rotas
