@@ -38,19 +38,19 @@ class PropertyController {
     const propertiesCompability = properties.rows.map((property) => {
       let Suncompatibility = () => {
         let sun = 0;
-        if (property.smoke === "1") {
+        if (property.smoke === "1" || property.smoke === "0.5") {
           sun += 20;
         }
-        if (property.drink === "1") {
+        if (property.drink === "1" || property.drink === "0.5") {
           sun += 20;
         }
-        if (property.animals === "1") {
+        if (property.animals === "1" || property.animals === "0.5") {
           sun += 20;
         }
-        if (property.organized === "1") {
+        if (property.organized === "1" || property.organized === "0.5") {
           sun += 20;
         }
-        if (property.responsable === "1") {
+        if (property.responsable === "1" || property.responsable === "0.5") {
           sun += 20;
         }
         return sun;
